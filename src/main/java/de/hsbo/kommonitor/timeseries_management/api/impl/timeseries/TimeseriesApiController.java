@@ -71,8 +71,6 @@ public class TimeseriesApiController extends BasePathController implements Times
 			station.get().addParameter(parameterEntity);
 			timeseriesMetadata.getParameter().setId(new BigDecimal(parameterEntity.getId()));
 			timeseriesMetadataRepository.saveAndFlush(TimeseriesMetadataMapper.INSTANCE.toDb(timeseriesMetadata));
-//			resultUri = new URI(String.format(BASE_PATH_KOMMONITOR_API_V1 + "/timeseries/%d", entity.getId()));
-//			resultUri = new URI(String.format(BASE_PATH_KOMMONITOR_API_V1 + "/timeseries/%d/%d", stationId, entity.getId()));
 			resultUri = new URI(String.format(BASE_PATH_KOMMONITOR_API_V1 + "/timeseries/%d/%d", stationId, parameterEntity.getId()));
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().body(e.getMessage());

@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.net.URL;
@@ -33,7 +32,6 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
@@ -42,6 +40,8 @@ import org.testcontainers.utility.DockerImageName;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
 import de.hsbo.kommonitor.timeseries_management.api.impl.parameter.ParametersRepository;
 import de.hsbo.kommonitor.timeseries_management.api.impl.stations.StationsApiController;
@@ -158,6 +158,22 @@ public class TimeSeriesManagementApiIT {
 		}
 	}
 
+	/**
+	 * <p>
+	 * testPostTimeseriesData.
+	 * </p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
+	@Test
+	void testGetAggregate() {
+		try {
+			postTimeseriesData();
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+	}
+
 	private void postTimeseriesData() throws Exception {
 		String parameterId = postTimeseriesMetadata();
 		assertNotEquals("", parameterId);
@@ -169,6 +185,7 @@ public class TimeSeriesManagementApiIT {
 		resultActions.andExpect(status().isOk());
 		String content = resultActions.andReturn().getResponse().getContentAsString();
 		assertNotNull(content);
+		DocumentContext json = JsonPath.parse(content);
 	}
 
 	private String postTimeseriesMetadata() throws Exception {

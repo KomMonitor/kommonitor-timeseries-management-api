@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,8 @@ public class TimeseriesRepositoryTest extends RepositoryTest {
 		List<TimeseriesDataEntity> timeseriesEntities = timeseriesDataRepository.findByTimeSeriesId(timeseriesId);
 		assertNotNull(timeseriesEntities);
 		assertEquals(timeseriesEntities.size(), 1);
+		List<Map<Date, Object>> aggregate = timeseriesDataRepository.getAggregate(timeseriesId);
+		assertNotNull(aggregate);
 	}
 
 }
