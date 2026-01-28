@@ -1,6 +1,5 @@
 package de.hsbo.kommonitor.timeseries_management.api.impl.stations;
 
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import de.hsbo.kommonitor.timeseries_management.api.StationsApi;
 import de.hsbo.kommonitor.timeseries_management.api.impl.BasePathController;
 import de.hsbo.kommonitor.timeseries_management.api.impl.parameter.ParametersEntity;
 import de.hsbo.kommonitor.timeseries_management.api.impl.parameter.ParametersRepository;
-import de.hsbo.kommonitor.timeseries_management.model.Parameter;
 import de.hsbo.kommonitor.timeseries_management.model.StationMetadata;
 import jakarta.validation.Valid;
 

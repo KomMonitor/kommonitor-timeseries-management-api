@@ -103,7 +103,7 @@ paths:
         "405":
           description: Invalid input
           content: {}
-  /timeseries/{stationId}/{parameterId}:    
+  /timeseries/{stationId}/{parameterId}:
     post:
       tags:
         - timeseries
@@ -128,7 +128,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Timeseries'
+              type: array
+              items:
+                $ref: '#/components/schemas/TimeseriesData'
         required: true
       responses:
         "201":
@@ -172,7 +174,7 @@ paths:
               schema:
                 type: array
                 items:
-                   $ref: '#/components/schemas/Timeseries'
+                   $ref: '#/components/schemas/TimeseriesData'
         "401":
             description: API key is missing or invalid
             content: {}
@@ -234,8 +236,8 @@ components:
                  type: string
                 unit:
                  type: string
-        Timeseries:
-            title: Timeseries
+        TimeseriesData:
+            title: TimeseriesData
             required:
                 - value
                 - timestamp

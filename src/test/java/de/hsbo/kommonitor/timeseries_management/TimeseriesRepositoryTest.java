@@ -1,10 +1,12 @@
 package de.hsbo.kommonitor.timeseries_management;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,35 +24,36 @@ public class TimeseriesRepositoryTest extends RepositoryTest {
 
 	@Autowired
 	StationsRepository stationRepository;
-	
+
 	@Autowired
 	ParametersRepository parameterRepository;
-	
+
 	@Autowired
 	public TimeseriesMetadataRepository timeseriesMetadataRepository;
-	
+
 	@Autowired
 	public TimeseriesDataRepository timeseriesDataRepository;
-	
+
 	@Test
 	void testAddTimeseries() {
-		
 		Integer stationsId = 1;
 		ParametersEntity parameterEntity = new ParametersEntity("test_parameter", "test_unit");
 		parameterRepository.saveAndFlush(parameterEntity);
 		StationsEntity stationEntity = new StationsEntity(stationsId, "test_station");
 		stationEntity.addParameter(parameterEntity);
-		stationRepository.saveAndFlush(stationEntity);		
-		Integer parametersId = parameterEntity.getId();		
-		TimeseriesMetadataEntity timeseriesEntity = new TimeseriesMetadataEntity(stationsId, parametersId);
-		timeseriesMetadataRepository.saveAndFlush(timeseriesEntity);
+		stationRepository.saveAndFlush(stationEntity);
+		Integer parametersId = parameterEntity.getId();
+		TimeseriesMetadataEntity timeseriesMetadataEntity = new TimeseriesMetadataEntity(stationsId, parametersId);
+		timeseriesMetadataRepository.saveAndFlush(timeseriesMetadataEntity);
 		assertEquals(timeseriesMetadataRepository.count(), 1);
-		Integer timeseriesId = timeseriesEntity.getId();
+		Optional<TimeseriesMetadataEntity> timeseriesMetadataEntityFromDb = timeseriesMetadataRepository.findByStationIdAndParameterId(stationsId, parametersId);
+		assertTrue(timeseriesMetadataEntityFromDb.isPresent());
+		Integer timeseriesId = timeseriesMetadataEntityFromDb.get().getId();
 		TimeseriesDataEntity timeseriesDataEntity = new TimeseriesDataEntity(timeseriesId, 0.1f, new Date());
 		timeseriesDataRepository.saveAndFlush(timeseriesDataEntity);
 		List<TimeseriesDataEntity> timeseriesEntities = timeseriesDataRepository.findByTimeSeriesId(timeseriesId);
 		assertNotNull(timeseriesEntities);
 		assertEquals(timeseriesEntities.size(), 1);
 	}
-	
+
 }

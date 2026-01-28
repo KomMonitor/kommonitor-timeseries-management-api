@@ -13,11 +13,11 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Timeseries
+ * TimeseriesData
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-03T11:13:03.921845500+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
-public class Timeseries implements Serializable {
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-28T08:52:09.622875100+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
+public class TimeseriesData implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -25,19 +25,19 @@ public class Timeseries implements Serializable {
 
   private OffsetDateTime timestamp = null;
 
-  public Timeseries() {
+  public TimeseriesData() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public Timeseries(BigDecimal value, OffsetDateTime timestamp) {
+  public TimeseriesData(BigDecimal value, OffsetDateTime timestamp) {
     this.value = value;
     this.timestamp = timestamp;
   }
 
-  public Timeseries value(BigDecimal value) {
+  public TimeseriesData value(BigDecimal value) {
     this.value = value;
     return this;
   }
@@ -57,7 +57,7 @@ public class Timeseries implements Serializable {
     this.value = value;
   }
 
-  public Timeseries timestamp(OffsetDateTime timestamp) {
+  public TimeseriesData timestamp(OffsetDateTime timestamp) {
     this.timestamp = timestamp;
     return this;
   }
@@ -85,9 +85,9 @@ public class Timeseries implements Serializable {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Timeseries timeseries = (Timeseries) o;
-    return Objects.equals(this.value, timeseries.value) &&
-        Objects.equals(this.timestamp, timeseries.timestamp);
+    TimeseriesData timeseriesData = (TimeseriesData) o;
+    return Objects.equals(this.value, timeseriesData.value) &&
+        Objects.equals(this.timestamp, timeseriesData.timestamp);
   }
 
   @Override
@@ -98,7 +98,7 @@ public class Timeseries implements Serializable {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Timeseries {\n");
+    sb.append("class TimeseriesData {\n");
     sb.append("    value: ").append(toIndentedString(value)).append("\n");
     sb.append("    timestamp: ").append(toIndentedString(timestamp)).append("\n");
     sb.append("}");

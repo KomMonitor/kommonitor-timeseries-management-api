@@ -6,36 +6,29 @@
 package de.hsbo.kommonitor.timeseries_management.api;
 
 import java.math.BigDecimal;
-import de.hsbo.kommonitor.timeseries_management.model.Timeseries;
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import de.hsbo.kommonitor.timeseries_management.model.TimeseriesData;
 import de.hsbo.kommonitor.timeseries_management.model.TimeseriesMetadata;
-import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.multipart.MultipartFile;
-
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-03T11:14:26.096035+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-28T08:53:57.253276600+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
 @Validated
 @Tag(name = "timeseries", description = "the timeseries API")
 public interface TimeseriesApi {
@@ -46,7 +39,7 @@ public interface TimeseriesApi {
      *
      * @param stationId the identifier of the station (required)
      * @param parameterId the identifier of the parameter (required)
-     * @param timeseries timeseries data (required)
+     * @param timeseriesData timeseries data (required)
      * @return Created (status code 201)
      *         or API key is missing or invalid (status code 401)
      *         or Forbidden (status code 403)
@@ -72,10 +65,10 @@ public interface TimeseriesApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Void> addTimeseriesAsBody(
+    ResponseEntity<?> addTimeseriesAsBody(
         @Parameter(name = "stationId", description = "the identifier of the station", required = true, in = ParameterIn.PATH) @PathVariable("stationId") BigDecimal stationId,
         @Parameter(name = "parameterId", description = "the identifier of the parameter", required = true, in = ParameterIn.PATH) @PathVariable("parameterId") BigDecimal parameterId,
-        @Parameter(name = "Timeseries", description = "timeseries data", required = true) @Valid @RequestBody Timeseries timeseries
+        @Parameter(name = "TimeseriesData", description = "timeseries data", required = true) @Valid @RequestBody List<@Valid TimeseriesData> timeseriesData
     );
 
 
@@ -133,7 +126,7 @@ public interface TimeseriesApi {
         tags = { "timeseries" },
         responses = {
             @ApiResponse(responseCode = "200", description = "timeseries data", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Timeseries.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TimeseriesData.class)))
             }),
             @ApiResponse(responseCode = "401", description = "API key is missing or invalid"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
@@ -147,7 +140,7 @@ public interface TimeseriesApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<Timeseries>> getTimeseries(
+    ResponseEntity<?> getTimeseries(
         @Parameter(name = "stationId", description = "the identifier of the station", required = true, in = ParameterIn.PATH) @PathVariable("stationId") BigDecimal stationId,
         @Parameter(name = "parameterId", description = "the identifier of the parameter", required = true, in = ParameterIn.PATH) @PathVariable("parameterId") BigDecimal parameterId
     );

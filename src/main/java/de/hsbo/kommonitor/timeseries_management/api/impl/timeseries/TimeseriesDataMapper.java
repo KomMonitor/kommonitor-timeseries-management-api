@@ -9,8 +9,7 @@ import java.util.Date;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import de.hsbo.kommonitor.timeseries_management.model.Timeseries;
-import de.hsbo.kommonitor.timeseries_management.model.TimeseriesMetadata;
+import de.hsbo.kommonitor.timeseries_management.model.TimeseriesData;
 
 @Mapper
 public interface TimeseriesDataMapper {
@@ -19,18 +18,18 @@ public interface TimeseriesDataMapper {
 
 	TimeseriesDataMapper INSTANCE = Mappers.getMapper(TimeseriesDataMapper.class);
 	
-	default TimeseriesDataEntity toDb(Timeseries timeseriesData) {
+	default TimeseriesDataEntity toDb(TimeseriesData timeseriesData) {
 		float value = timeseriesData.getValue().floatValue();
 		OffsetDateTime timestamp = timeseriesData.getTimestamp();
 		TimeseriesDataEntity result = new TimeseriesDataEntity(value, Date.from(timestamp.toInstant()));
 		return result;
 	}
 
-	default Timeseries fromDb(TimeseriesDataEntity entity) {
+	default TimeseriesData fromDb(TimeseriesDataEntity entity) {
 		Float value = entity.getValue();
 		Date timestamp = entity.getTimestamp();
 		ZoneOffset zoneOffset = zone.getRules().getOffset(timestamp.toInstant());
-		Timeseries result = new Timeseries(new BigDecimal(value),
+		TimeseriesData result = new TimeseriesData(new BigDecimal(value),
 				timestamp.toInstant().atOffset(zoneOffset));
 		return result;
 	}
