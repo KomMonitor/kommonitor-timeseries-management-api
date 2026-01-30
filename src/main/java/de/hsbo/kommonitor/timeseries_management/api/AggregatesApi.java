@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import de.hsbo.kommonitor.timeseries_management.model.TimeseriesAggregateDataValue;
+import de.hsbo.kommonitor.timeseries_management.model.TimeseriesAggregateData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -53,7 +53,7 @@ public interface AggregatesApi {
         tags = { "aggregates" },
         responses = {
             @ApiResponse(responseCode = "200", description = "timeseries data", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TimeseriesAggregateDataValue.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TimeseriesAggregateData.class)))
             }),
             @ApiResponse(responseCode = "401", description = "API key is missing or invalid"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),

@@ -304,14 +304,14 @@ components:
         TimeseriesAggregateData:
             title: TimeseriesAggregateData
             type: object
+            properties:
+              time-bucket:
+                type: date-time
+            required:
+              - time-bucket
             additionalProperties:
-              type: object
-              properties:
-                sequence:
-                  type: date-time
-                value:
-                  type: number
-                  format: float
+                type: number
+                format: float
         TimeseriesMetadata:
             title: Timeseries
             required:
