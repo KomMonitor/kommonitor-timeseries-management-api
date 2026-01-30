@@ -26,28 +26,32 @@ import jakarta.validation.Valid;
 @Controller
 //@RequestMapping("${openapi.komMonitorTimeseriesDataAccess.base-path:}")
 public class TimeseriesApiController extends BasePathController implements TimeseriesApi {
-	
+
 	TimeseriesMetadataRepository timeseriesMetadataRepository;
-	
+
 	TimeseriesDataRepository timeseriesDataRepository;
-	
+
 	ParametersRepository parametersRepository;
-	
+
 	StationsRepository stationsRepository;
-	
-    @Autowired
-    public TimeseriesApiController(TimeseriesMetadataRepository timeseriesRepository, TimeseriesDataRepository timeseriesDataRepository, ParametersRepository parametersRepository, StationsRepository stationsRepository) {
-    	this.timeseriesMetadataRepository = timeseriesRepository;
-    	this.timeseriesDataRepository = timeseriesDataRepository;
-    	this.parametersRepository = parametersRepository;
-    	this.stationsRepository = stationsRepository;
-    }
+
+	@Autowired
+	public TimeseriesApiController(TimeseriesMetadataRepository timeseriesRepository,
+			TimeseriesDataRepository timeseriesDataRepository, ParametersRepository parametersRepository,
+			StationsRepository stationsRepository) {
+		this.timeseriesMetadataRepository = timeseriesRepository;
+		this.timeseriesDataRepository = timeseriesDataRepository;
+		this.parametersRepository = parametersRepository;
+		this.stationsRepository = stationsRepository;
+	}
 
 	@Override
 	public ResponseEntity<?> getTimeseries(BigDecimal stationId, BigDecimal parameterId) {
-		Optional<TimeseriesMetadataEntity> timeseriesMetadata = timeseriesMetadataRepository.findByStationIdAndParameterId(stationId.intValue(), parameterId.intValue());
-		if(timeseriesMetadata.isEmpty()) {
-			return ResponseEntity.badRequest().body(String.format("Timeseries with station id %d and parameter id does not exist.", stationId, parameterId));
+		Optional<TimeseriesMetadataEntity> timeseriesMetadata = timeseriesMetadataRepository
+				.findByStationIdAndParameterId(stationId.intValue(), parameterId.intValue());
+		if (timeseriesMetadata.isEmpty()) {
+			return ResponseEntity.badRequest().body(String
+					.format("Timeseries with station id %d and parameter id does not exist.", stationId, parameterId));
 		}
 		int timeSeriesId = timeseriesMetadata.get().getId();
 		List<TimeseriesData> resultList = new ArrayList<>();
@@ -64,14 +68,16 @@ public class TimeseriesApiController extends BasePathController implements Times
 		try {
 			int stationId = timeseriesMetadata.getStationId().intValue();
 			Optional<StationsEntity> station = stationsRepository.findById(stationId);
-			if(station.isEmpty()) {
+			if (station.isEmpty()) {
 				return ResponseEntity.badRequest().body(String.format("Station with id %d does not exist.", stationId));
-			}			
-			ParametersEntity parameterEntity = parametersRepository.saveAndFlush(ParametersMapper.INSTANCE.toDb(timeseriesMetadata.getParameter()));
+			}
+			ParametersEntity parameterEntity = parametersRepository
+					.saveAndFlush(ParametersMapper.INSTANCE.toDb(timeseriesMetadata.getParameter()));
 			station.get().addParameter(parameterEntity);
 			timeseriesMetadata.getParameter().setId(new BigDecimal(parameterEntity.getId()));
 			timeseriesMetadataRepository.saveAndFlush(TimeseriesMetadataMapper.INSTANCE.toDb(timeseriesMetadata));
-			resultUri = new URI(String.format(BASE_PATH_KOMMONITOR_API_V1 + "/timeseries/%d/%d", stationId, parameterEntity.getId()));
+			resultUri = new URI(String.format(BASE_PATH_KOMMONITOR_API_V1 + "/timeseries/%d/%d", stationId,
+					parameterEntity.getId()));
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().body(e.getMessage());
 		}
@@ -81,9 +87,11 @@ public class TimeseriesApiController extends BasePathController implements Times
 	@Override
 	public ResponseEntity<?> addTimeseriesAsBody(BigDecimal stationId, BigDecimal parameterId,
 			@Valid List<@Valid TimeseriesData> timeseriesDataList) {
-		Optional<TimeseriesMetadataEntity> timeseriesMetadata = timeseriesMetadataRepository.findByStationIdAndParameterId(stationId.intValue(), parameterId.intValue());
-		if(timeseriesMetadata.isEmpty()) {
-			return ResponseEntity.badRequest().body(String.format("Timeseries with station id %d and parameter id does not exist.", stationId, parameterId));
+		Optional<TimeseriesMetadataEntity> timeseriesMetadata = timeseriesMetadataRepository
+				.findByStationIdAndParameterId(stationId.intValue(), parameterId.intValue());
+		if (timeseriesMetadata.isEmpty()) {
+			return ResponseEntity.badRequest().body(String
+					.format("Timeseries with station id %d and parameter id does not exist.", stationId, parameterId));
 		}
 		int timeSeriesId = timeseriesMetadata.get().getId();
 		TimeseriesDataEntity timeSeriesDataEntity;
@@ -91,7 +99,7 @@ public class TimeseriesApiController extends BasePathController implements Times
 			timeSeriesDataEntity = TimeseriesDataMapper.INSTANCE.toDb(timeseriesData);
 			timeSeriesDataEntity.setTimeseriesId(timeSeriesId);
 			timeseriesDataRepository.save(timeSeriesDataEntity);
-		}		
+		}
 		timeseriesDataRepository.flush();
 		return null;
 	}

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import de.hsbo.kommonitor.timeseries_management.api.impl.timeseries.TimeseriesDa
 import de.hsbo.kommonitor.timeseries_management.api.impl.timeseries.TimeseriesDataRepository;
 import de.hsbo.kommonitor.timeseries_management.api.impl.timeseries.TimeseriesMetadataEntity;
 import de.hsbo.kommonitor.timeseries_management.api.impl.timeseries.TimeseriesMetadataRepository;
+import de.hsbo.kommonitor.timeseries_management.model.TimeseriesAggregateDataValue;
 
 public class TimeseriesRepositoryTest extends RepositoryTest {
 
@@ -55,8 +57,17 @@ public class TimeseriesRepositoryTest extends RepositoryTest {
 		List<TimeseriesDataEntity> timeseriesEntities = timeseriesDataRepository.findByTimeSeriesId(timeseriesId);
 		assertNotNull(timeseriesEntities);
 		assertEquals(timeseriesEntities.size(), 1);
-		List<Map<Date, Object>> aggregate = timeseriesDataRepository.getAggregate(timeseriesId);
+		String function = "avg";
+		List<Map<String, Object>> aggregate = timeseriesDataRepository.getAggregate(timeseriesId, function);
 		assertNotNull(aggregate);
+		for (Map<String, Object> map : aggregate) {
+			Object value = map.get(function);
+			Object time = map.get("time_bucket");
+			if(time instanceof Instant) {
+				Date date = Date.from((Instant)time);
+			}
+//			result.add(new TimeseriesAggregateDataValue(,  value));
+		}
 	}
 
 }

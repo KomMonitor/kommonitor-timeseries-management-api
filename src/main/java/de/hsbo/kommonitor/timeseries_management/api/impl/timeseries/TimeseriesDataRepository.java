@@ -1,6 +1,5 @@
 package de.hsbo.kommonitor.timeseries_management.api.impl.timeseries;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,6 +22,6 @@ public interface TimeseriesDataRepository extends JpaRepository<TimeseriesDataEn
     
 //    @Query("select time_bucket(cast('1 day' as interval), timestamp), avg(value) from Timeseries_data where timeseriesId = :timeseries_id group by 1")
     @NativeQuery("select time_bucket('1 day'\\:\\:interval, timestamp), avg(value) from Timeseries_data where timeseries_data.timeseries_id = :timeseries_id group by 1")
-    List<Map<Date, Object>> getAggregate(@Param("timeseries_id") Integer timeseriesId);
+    List<Map<String, Object>> getAggregate(@Param("timeseries_id") Integer timeseriesId, @Param("function") String function);
 
 }

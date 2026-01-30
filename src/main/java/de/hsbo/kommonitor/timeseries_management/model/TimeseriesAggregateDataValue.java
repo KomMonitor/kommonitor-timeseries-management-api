@@ -4,39 +4,50 @@ import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
+import org.springframework.lang.Nullable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 
 /**
- * TimeseriesData
+ * TimeseriesAggregateDataValue
  */
 
+@JsonTypeName("TimeseriesAggregateData_value")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-29T15:59:34.443462600+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
-public class TimeseriesData implements Serializable {
+public class TimeseriesAggregateDataValue implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private Float value;
+  private OffsetDateTime sequence = null;
 
-  private OffsetDateTime timestamp = null;
+  private @Nullable Float value;
 
-  public TimeseriesData() {
-    super();
+  public TimeseriesAggregateDataValue sequence(OffsetDateTime sequence) {
+    this.sequence = sequence;
+    return this;
   }
 
   /**
-   * Constructor with only required parameters
+   * Get sequence
+   * @return sequence
    */
-  public TimeseriesData(Float value, OffsetDateTime timestamp) {
-    this.value = value;
-    this.timestamp = timestamp;
+  @Valid 
+  @Schema(name = "sequence", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("sequence")
+  public OffsetDateTime getSequence() {
+    return sequence;
   }
 
-  public TimeseriesData value(Float value) {
+  public void setSequence(OffsetDateTime sequence) {
+    this.sequence = sequence;
+  }
+
+  public TimeseriesAggregateDataValue value(Float value) {
     this.value = value;
     return this;
   }
@@ -45,8 +56,8 @@ public class TimeseriesData implements Serializable {
    * Get value
    * @return value
    */
-  @NotNull 
-  @Schema(name = "value", requiredMode = Schema.RequiredMode.REQUIRED)
+  
+  @Schema(name = "value", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("value")
   public Float getValue() {
     return value;
@@ -54,26 +65,6 @@ public class TimeseriesData implements Serializable {
 
   public void setValue(Float value) {
     this.value = value;
-  }
-
-  public TimeseriesData timestamp(OffsetDateTime timestamp) {
-    this.timestamp = timestamp;
-    return this;
-  }
-
-  /**
-   * Get timestamp
-   * @return timestamp
-   */
-  @NotNull @Valid 
-  @Schema(name = "timestamp", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("timestamp")
-  public OffsetDateTime getTimestamp() {
-    return timestamp;
-  }
-
-  public void setTimestamp(OffsetDateTime timestamp) {
-    this.timestamp = timestamp;
   }
 
   @Override
@@ -84,22 +75,22 @@ public class TimeseriesData implements Serializable {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    TimeseriesData timeseriesData = (TimeseriesData) o;
-    return Objects.equals(this.value, timeseriesData.value) &&
-        Objects.equals(this.timestamp, timeseriesData.timestamp);
+    TimeseriesAggregateDataValue timeseriesAggregateDataValue = (TimeseriesAggregateDataValue) o;
+    return Objects.equals(this.sequence, timeseriesAggregateDataValue.sequence) &&
+        Objects.equals(this.value, timeseriesAggregateDataValue.value);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(value, timestamp);
+    return Objects.hash(sequence, value);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class TimeseriesData {\n");
+    sb.append("class TimeseriesAggregateDataValue {\n");
+    sb.append("    sequence: ").append(toIndentedString(sequence)).append("\n");
     sb.append("    value: ").append(toIndentedString(value)).append("\n");
-    sb.append("    timestamp: ").append(toIndentedString(timestamp)).append("\n");
     sb.append("}");
     return sb.toString();
   }

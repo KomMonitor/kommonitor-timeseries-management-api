@@ -187,6 +187,59 @@ paths:
         "405":
           description: Invalid input
           content: {}
+  /timeseries/{stationId}/{parameterId}/aggregates:
+    get:
+      tags:
+        - aggregates
+      summary: Get timeseries aggregates
+      description: Get timeseries aggregates
+      operationId: getTimeseriesAggregates
+      parameters:
+        - name: stationId
+          in: path
+          description: the identifier of the station
+          required: true
+          schema:
+            type: number
+        - name: parameterId
+          in: path
+          description: the identifier of the parameter
+          required: true
+          schema:
+            type: number
+        - name: frequency
+          in: query
+          description: the identifier of the station
+          required: true
+          schema:
+            type: string
+        - name: function
+          in: query
+          description: the identifier of the parameter
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: aggregated timeseries data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                   $ref: '#/components/schemas/TimeseriesAggregateData'
+        "401":
+            description: API key is missing or invalid
+            content: {}
+        "403":
+          description: Forbidden
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+        "405":
+          description: Invalid input
+          content: {}
 components:
     schemas:
         StationMetadata:
@@ -245,8 +298,20 @@ components:
             properties:
                 value: 
                   type: number
+                  format: float
                 timestamp:
-                  type: date-time        
+                  type: date-time
+        TimeseriesAggregateData:
+            title: TimeseriesAggregateData
+            type: object
+            additionalProperties:
+              type: object
+              properties:
+                sequence:
+                  type: date-time
+                value:
+                  type: number
+                  format: float
         TimeseriesMetadata:
             title: Timeseries
             required:

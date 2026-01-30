@@ -1,6 +1,5 @@
 package de.hsbo.kommonitor.timeseries_management.api.impl.timeseries;
 
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -29,7 +28,7 @@ public interface TimeseriesDataMapper {
 		Float value = entity.getValue();
 		Date timestamp = entity.getTimestamp();
 		ZoneOffset zoneOffset = zone.getRules().getOffset(timestamp.toInstant());
-		TimeseriesData result = new TimeseriesData(new BigDecimal(value),
+		TimeseriesData result = new TimeseriesData(value,
 				timestamp.toInstant().atOffset(zoneOffset));
 		return result;
 	}
