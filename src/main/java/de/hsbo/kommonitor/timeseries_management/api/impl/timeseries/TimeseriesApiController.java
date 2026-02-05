@@ -51,7 +51,7 @@ public class TimeseriesApiController extends BasePathController implements Times
 				.findByStationIdAndParameterId(stationId.intValue(), parameterId.intValue());
 		if (timeseriesMetadata.isEmpty()) {
 			return ResponseEntity.badRequest().body(String
-					.format("Timeseries with station id %d and parameter id does not exist.", stationId, parameterId));
+					.format("Timeseries with station id %d and parameter id %d does not exist.", stationId, parameterId));
 		}
 		int timeSeriesId = timeseriesMetadata.get().getId();
 		List<TimeseriesData> resultList = new ArrayList<>();
@@ -91,7 +91,7 @@ public class TimeseriesApiController extends BasePathController implements Times
 				.findByStationIdAndParameterId(stationId.intValue(), parameterId.intValue());
 		if (timeseriesMetadata.isEmpty()) {
 			return ResponseEntity.badRequest().body(String
-					.format("Timeseries with station id %d and parameter id does not exist.", stationId, parameterId));
+					.format("Timeseries with station id %d and parameter id %d does not exist.", stationId, parameterId));
 		}
 		int timeSeriesId = timeseriesMetadata.get().getId();
 		TimeseriesDataEntity timeSeriesDataEntity;
@@ -101,7 +101,7 @@ public class TimeseriesApiController extends BasePathController implements Times
 			timeseriesDataRepository.save(timeSeriesDataEntity);
 		}
 		timeseriesDataRepository.flush();
-		return null;
+		return ResponseEntity.ok().build();
 	}
 
 }

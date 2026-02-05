@@ -1,0 +1,17 @@
+{
+    "parameter_name": "test",
+    "timeseries": [
+        {
+            "value": 0,
+            "timestamp": "2026-01-28T07:30:05.838Z"
+        },
+        {
+            "value": 2,
+            "timestamp": "2026-01-28T07:35:05.838Z"
+        },
+        {
+            "value": 3,
+            "timestamp": "2026-01-28T07:40:05.838Z"
+        }
+    ]
+}

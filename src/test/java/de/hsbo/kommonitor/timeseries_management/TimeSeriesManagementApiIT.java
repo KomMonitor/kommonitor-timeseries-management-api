@@ -49,6 +49,7 @@ import de.hsbo.kommonitor.timeseries_management.api.impl.stations.StationsReposi
 import de.hsbo.kommonitor.timeseries_management.api.impl.timeseries.TimeseriesApiController;
 import de.hsbo.kommonitor.timeseries_management.api.impl.timeseries.TimeseriesDataRepository;
 import de.hsbo.kommonitor.timeseries_management.api.impl.timeseries.TimeseriesMetadataRepository;
+import de.hsbo.kommonitor.timeseries_management.api.impl.timeseries.TimeseriesWithParameterNameApiController;
 
 /**
  * <p>
@@ -74,6 +75,8 @@ public class TimeSeriesManagementApiIT {
 
 	private static final String TIMESERIES_DATA_ENDPOINT_TEMPLATE = ROOT_ENDPOINT + "/timeseries/%s/%s";
 
+	private static final String TIMESERIES_DATA_BY_NAME_ENDPOINT_TEMPLATE = ROOT_ENDPOINT + "/timeseries/%s";
+
 	private static final MediaType PROVENANCE_ENDPOINT_MEDIA_TYPE = MediaType
 			.parseMediaType("application/vnd.org.n52.project.enforce.provenance-service.api.v1+json");
 
@@ -96,6 +99,8 @@ public class TimeSeriesManagementApiIT {
 	private StationsApiController stationsApiController;
 
 	private TimeseriesApiController timeseriesApiController;
+
+	private TimeseriesWithParameterNameApiController timeseriesWithParameterNameApiController;
 
 	static DockerImageName image = DockerImageName.parse("timescale/timescaledb-ha:pg18.1-ts2.23.1-oss")
 			.asCompatibleSubstituteFor("postgres");
@@ -137,7 +142,12 @@ public class TimeSeriesManagementApiIT {
 		timeseriesApiController = new TimeseriesApiController(timeseriesMetadataRepository, timeseriesDataRepository,
 				parametersRepository, stationsRepository);
 
-		mvc = MockMvcBuilders.standaloneSetup(stationsApiController, timeseriesApiController)
+		timeseriesWithParameterNameApiController = new TimeseriesWithParameterNameApiController(
+				timeseriesMetadataRepository, timeseriesDataRepository, parametersRepository, stationsRepository);
+
+		mvc = MockMvcBuilders
+				.standaloneSetup(stationsApiController, timeseriesApiController,
+						timeseriesWithParameterNameApiController)
 				.setMessageConverters(CustomMessageConverter()).build();
 
 	}
@@ -172,14 +182,38 @@ public class TimeSeriesManagementApiIT {
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
+		// TODO test get aggregate
+	}
+
+	/**
+	 * <p>
+	 * testPostTimeseriesDataByName.
+	 * </p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
+	@Test
+	void testPostTimeseriesDataByName() {
+		try {
+			postTimeseriesData();
+			String timeseriesEdpoint = String.format(TIMESERIES_DATA_BY_NAME_ENDPOINT_TEMPLATE, STATION_ID);
+			ResultActions resultActions = performPostRequest(timeseriesEdpoint, "add-timeseries-data-by-name.json");
+			resultActions.andExpect(status().isOk());
+//			resultActions = performGetRequest(timeseriesEdpoint);
+//			resultActions.andExpect(status().isOk());
+//			String content = resultActions.andReturn().getResponse().getContentAsString();
+//			assertNotNull(content);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+
 	}
 
 	private void postTimeseriesData() throws Exception {
 		String parameterId = postTimeseriesMetadata();
 		assertNotEquals("", parameterId);
 		String timeseriesEdpoint = String.format(TIMESERIES_DATA_ENDPOINT_TEMPLATE, STATION_ID, parameterId);
-		ResultActions resultActions = performPostRequest(
-				timeseriesEdpoint , "add-timeseries-data.json");
+		ResultActions resultActions = performPostRequest(timeseriesEdpoint, "add-timeseries-data.json");
 		resultActions.andExpect(status().isOk());
 		resultActions = performGetRequest(timeseriesEdpoint);
 		resultActions.andExpect(status().isOk());
@@ -211,8 +245,7 @@ public class TimeSeriesManagementApiIT {
 	}
 
 	private ResultActions performGetRequest(String endpoint) throws Exception {
-		ResultActions resultActions = mvc
-				.perform(get(endpoint).contentType(MediaType.APPLICATION_JSON));
+		ResultActions resultActions = mvc.perform(get(endpoint).contentType(MediaType.APPLICATION_JSON));
 		return resultActions;
 	}
 
