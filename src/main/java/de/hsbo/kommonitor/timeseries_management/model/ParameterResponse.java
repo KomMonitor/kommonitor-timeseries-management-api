@@ -14,11 +14,11 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Parameter
+ * ParameterResponse
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-20T15:38:36.943031800+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
-public class Parameter implements Serializable {
+public class ParameterResponse implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -28,19 +28,23 @@ public class Parameter implements Serializable {
 
   private String unit;
 
-  public Parameter() {
+  private @Nullable TimeseriesData lastEntry;
+
+  private @Nullable ParameterResponseAllOfRange range;
+
+  public ParameterResponse() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public Parameter(String name, String unit) {
+  public ParameterResponse(String name, String unit) {
     this.name = name;
     this.unit = unit;
   }
 
-  public Parameter id(BigDecimal id) {
+  public ParameterResponse id(BigDecimal id) {
     this.id = id;
     return this;
   }
@@ -60,7 +64,7 @@ public class Parameter implements Serializable {
     this.id = id;
   }
 
-  public Parameter name(String name) {
+  public ParameterResponse name(String name) {
     this.name = name;
     return this;
   }
@@ -80,7 +84,7 @@ public class Parameter implements Serializable {
     this.name = name;
   }
 
-  public Parameter unit(String unit) {
+  public ParameterResponse unit(String unit) {
     this.unit = unit;
     return this;
   }
@@ -100,6 +104,46 @@ public class Parameter implements Serializable {
     this.unit = unit;
   }
 
+  public ParameterResponse lastEntry(TimeseriesData lastEntry) {
+    this.lastEntry = lastEntry;
+    return this;
+  }
+
+  /**
+   * Get lastEntry
+   * @return lastEntry
+   */
+  @Valid 
+  @Schema(name = "last_entry", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("last_entry")
+  public TimeseriesData getLastEntry() {
+    return lastEntry;
+  }
+
+  public void setLastEntry(TimeseriesData lastEntry) {
+    this.lastEntry = lastEntry;
+  }
+
+  public ParameterResponse range(ParameterResponseAllOfRange range) {
+    this.range = range;
+    return this;
+  }
+
+  /**
+   * Get range
+   * @return range
+   */
+  @Valid 
+  @Schema(name = "range", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("range")
+  public ParameterResponseAllOfRange getRange() {
+    return range;
+  }
+
+  public void setRange(ParameterResponseAllOfRange range) {
+    this.range = range;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -108,24 +152,28 @@ public class Parameter implements Serializable {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Parameter parameter = (Parameter) o;
-    return Objects.equals(this.id, parameter.id) &&
-        Objects.equals(this.name, parameter.name) &&
-        Objects.equals(this.unit, parameter.unit);
+    ParameterResponse parameterResponse = (ParameterResponse) o;
+    return Objects.equals(this.id, parameterResponse.id) &&
+        Objects.equals(this.name, parameterResponse.name) &&
+        Objects.equals(this.unit, parameterResponse.unit) &&
+        Objects.equals(this.lastEntry, parameterResponse.lastEntry) &&
+        Objects.equals(this.range, parameterResponse.range);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, unit);
+    return Objects.hash(id, name, unit, lastEntry, range);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Parameter {\n");
+    sb.append("class ParameterResponse {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    unit: ").append(toIndentedString(unit)).append("\n");
+    sb.append("    lastEntry: ").append(toIndentedString(lastEntry)).append("\n");
+    sb.append("    range: ").append(toIndentedString(range)).append("\n");
     sb.append("}");
     return sb.toString();
   }

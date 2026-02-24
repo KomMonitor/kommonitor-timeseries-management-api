@@ -6,6 +6,7 @@
 package de.hsbo.kommonitor.timeseries_management.api;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import de.hsbo.kommonitor.timeseries_management.model.TimeseriesData;
 import de.hsbo.kommonitor.timeseries_management.model.TimeseriesMetadata;
@@ -28,7 +30,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-28T08:53:57.253276600+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-23T13:15:22.249674500+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
 @Validated
 @Tag(name = "timeseries", description = "the timeseries API")
 public interface TimeseriesApi {
@@ -113,6 +115,8 @@ public interface TimeseriesApi {
      *
      * @param stationId the identifier of the station (required)
      * @param parameterId the identifier of the parameter (required)
+     * @param start optional start timestamp (optional)
+     * @param end optional end timestamp (optional)
      * @return timeseries data (status code 200)
      *         or API key is missing or invalid (status code 401)
      *         or Forbidden (status code 403)
@@ -142,7 +146,9 @@ public interface TimeseriesApi {
     
     ResponseEntity<?> getTimeseries(
         @Parameter(name = "stationId", description = "the identifier of the station", required = true, in = ParameterIn.PATH) @PathVariable("stationId") BigDecimal stationId,
-        @Parameter(name = "parameterId", description = "the identifier of the parameter", required = true, in = ParameterIn.PATH) @PathVariable("parameterId") BigDecimal parameterId
+        @Parameter(name = "parameterId", description = "the identifier of the parameter", required = true, in = ParameterIn.PATH) @PathVariable("parameterId") BigDecimal parameterId,
+        @Parameter(name = "start", description = "optional start timestamp", in = ParameterIn.QUERY) @Valid @RequestParam(value = "start", required = false) OffsetDateTime start,
+        @Parameter(name = "end", description = "optional end timestamp", in = ParameterIn.QUERY) @Valid @RequestParam(value = "end", required = false) OffsetDateTime end
     );
 
 }

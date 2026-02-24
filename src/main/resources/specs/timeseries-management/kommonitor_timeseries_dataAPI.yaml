@@ -61,7 +61,7 @@ paths:
               schema:
                 type: array
                 items:
-                   $ref: '#/components/schemas/StationMetadata'
+                   $ref: '#/components/schemas/StationMetadataResponse'
         "401":
             description: API key is missing or invalid
             content: {}
@@ -166,6 +166,18 @@ paths:
           required: true
           schema:
             type: number
+        - name: start
+          in: query
+          description: optional start timestamp
+          required: false
+          schema:
+            type: date-time
+        - name: end
+          in: query
+          description: optional end timestamp
+          required: false
+          schema:
+            type: date-time
       responses:
         "200":
           description: timeseries data
@@ -255,6 +267,18 @@ paths:
           required: true
           schema:
             type: string
+        - name: start
+          in: query
+          description: optional start timestamp
+          required: false
+          schema:
+            type: date-time
+        - name: end
+          in: query
+          description: optional end timestamp
+          required: false
+          schema:
+            type: date-time
       responses:
         "200":
           description: aggregated timeseries data
@@ -284,7 +308,6 @@ components:
             - name
             - id
             - position
-            - parameters
           type: object
           properties:
             name:
@@ -296,11 +319,17 @@ components:
             position:
               $ref: '#/components/schemas/Position'
               description: information about the position of the station
-            parameters:
-              type: array
-              items:
-                $ref: '#/components/schemas/Parameter'
-              description: list of parameters of the station
+        StationMetadataResponse:
+          title: StationMetadataResponse
+          allOf:
+            - $ref: '#/components/schemas/StationMetadata'
+            - type: object
+              properties:
+               parameters:
+                 type: array
+                 items:
+                   $ref: '#/components/schemas/ParameterResponse'
+                 description: list of parameters of the station
         Position:
             title: Position
             required:
@@ -325,6 +354,24 @@ components:
                  type: string
                 unit:
                  type: string
+        ParameterResponse:
+            title: ParameterResponse
+            allOf:
+             - $ref: '#/components/schemas/Parameter'
+             - type: object
+               properties:
+                  last_entry:
+                     $ref: '#/components/schemas/TimeseriesData'
+                  range:
+                   type: object
+                   required:
+                     - start
+                     - end
+                   properties:
+                      start:
+                        type: date-time
+                      end:
+                        type: date-time
         TimeseriesData:
             title: TimeseriesData
             required:

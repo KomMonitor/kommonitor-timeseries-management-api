@@ -137,7 +137,8 @@ public class TimeSeriesManagementApiIT {
 	@BeforeAll
 	void setUp() {
 
-		stationsApiController = new StationsApiController(stationsRepository, parametersRepository);
+		stationsApiController = new StationsApiController(stationsRepository, parametersRepository,
+				timeseriesDataRepository, timeseriesMetadataRepository);
 
 		timeseriesApiController = new TimeseriesApiController(timeseriesMetadataRepository, timeseriesDataRepository,
 				parametersRepository, stationsRepository);

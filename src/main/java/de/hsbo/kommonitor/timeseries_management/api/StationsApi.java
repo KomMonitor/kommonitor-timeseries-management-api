@@ -5,6 +5,8 @@
  */
 package de.hsbo.kommonitor.timeseries_management.api;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import de.hsbo.kommonitor.timeseries_management.model.StationMetadata;
+import de.hsbo.kommonitor.timeseries_management.model.StationMetadataResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -22,7 +25,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-28T08:53:57.253276600+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-23T13:15:22.249674500+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
 @Validated
 @Tag(name = "stations", description = "the stations API")
 public interface StationsApi {
@@ -81,7 +84,7 @@ public interface StationsApi {
         tags = { "stations" },
         responses = {
             @ApiResponse(responseCode = "200", description = "station data", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = StationMetadata.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = StationMetadataResponse.class)))
             }),
             @ApiResponse(responseCode = "401", description = "API key is missing or invalid"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),

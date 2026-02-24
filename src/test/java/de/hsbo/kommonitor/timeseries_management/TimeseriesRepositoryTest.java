@@ -56,7 +56,7 @@ public class TimeseriesRepositoryTest extends RepositoryTest {
 		assertEquals(timeseriesEntities.size(), 1);
 		String function = "avg";
 		String interval = "1 day";
-		String aggregate = timeseriesDataRepository.getAggregate(timeseriesId, interval, function);
+		String aggregate = timeseriesDataRepository.getAggregate(timeseriesId, interval, function, null, null);
 		assertNotNull(aggregate);
 //		for (Map<String, Object> map : aggregate) {
 //			Object value = map.get(function);

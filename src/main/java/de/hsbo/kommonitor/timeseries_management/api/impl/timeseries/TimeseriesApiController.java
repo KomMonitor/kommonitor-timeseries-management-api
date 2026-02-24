@@ -2,6 +2,7 @@ package de.hsbo.kommonitor.timeseries_management.api.impl.timeseries;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,24 +45,7 @@ public class TimeseriesApiController extends BasePathController implements Times
 		this.parametersRepository = parametersRepository;
 		this.stationsRepository = stationsRepository;
 	}
-
-	@Override
-	public ResponseEntity<?> getTimeseries(BigDecimal stationId, BigDecimal parameterId) {
-		Optional<TimeseriesMetadataEntity> timeseriesMetadata = timeseriesMetadataRepository
-				.findByStationIdAndParameterId(stationId.intValue(), parameterId.intValue());
-		if (timeseriesMetadata.isEmpty()) {
-			return ResponseEntity.badRequest().body(String
-					.format("Timeseries with station id %d and parameter id %d does not exist.", stationId, parameterId));
-		}
-		int timeSeriesId = timeseriesMetadata.get().getId();
-		List<TimeseriesData> resultList = new ArrayList<>();
-		List<TimeseriesDataEntity> timeseriesDataList = timeseriesDataRepository.findByTimeSeriesId(timeSeriesId);
-		for (TimeseriesDataEntity timeseriesDataEntity : timeseriesDataList) {
-			resultList.add(TimeseriesDataMapper.INSTANCE.fromDb(timeseriesDataEntity));
-		}
-		return ResponseEntity.ok(resultList);
-	}
-
+	
 	@Override
 	public ResponseEntity<?> addTimeseriesMetadataAsBody(@Valid TimeseriesMetadata timeseriesMetadata) {
 		URI resultUri = null;
@@ -102,6 +86,26 @@ public class TimeseriesApiController extends BasePathController implements Times
 		}
 		timeseriesDataRepository.flush();
 		return ResponseEntity.ok().build();
+	}
+
+	@Override
+	public ResponseEntity<?> getTimeseries(BigDecimal stationId, BigDecimal parameterId, @Valid OffsetDateTime start,
+			@Valid OffsetDateTime end) {
+		Optional<TimeseriesMetadataEntity> timeseriesMetadata = timeseriesMetadataRepository
+				.findByStationIdAndParameterId(stationId.intValue(), parameterId.intValue());
+		if (timeseriesMetadata.isEmpty()) {
+			return ResponseEntity.badRequest().body(String
+					.format("Timeseries with station id %d and parameter id %d does not exist.", stationId, parameterId));
+		}
+		int timeSeriesId = timeseriesMetadata.get().getId();
+		List<TimeseriesData> resultList = new ArrayList<>();
+		String startString = start != null ? start.toString() : null;
+		String endString = end != null ? end.toString() : null;
+		List<TimeseriesDataEntity> timeseriesDataList = timeseriesDataRepository.findByTimeSeriesIdStartEnd(timeSeriesId, startString, endString);
+		for (TimeseriesDataEntity timeseriesDataEntity : timeseriesDataList) {
+			resultList.add(TimeseriesDataMapper.INSTANCE.fromDb(timeseriesDataEntity));
+		}
+		return ResponseEntity.ok(resultList);
 	}
 
 }

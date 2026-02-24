@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  * TimeseriesDataWithParameterName
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-04T11:36:33.702946400+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-20T15:38:36.943031800+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
 public class TimeseriesDataWithParameterName implements Serializable {
 
   private static final long serialVersionUID = 1L;

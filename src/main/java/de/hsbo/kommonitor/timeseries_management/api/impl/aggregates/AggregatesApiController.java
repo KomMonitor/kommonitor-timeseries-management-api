@@ -1,6 +1,9 @@
 package de.hsbo.kommonitor.timeseries_management.api.impl.aggregates;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +36,8 @@ public class AggregatesApiController extends BasePathController implements Aggre
 
 	@Override
 	public ResponseEntity<?> getTimeseriesAggregates(BigDecimal stationId, BigDecimal parameterId,
-			@NotNull @Valid String frequency, @NotNull @Valid String function) {
+			@NotNull @Valid String frequency, @NotNull @Valid String function, @Valid OffsetDateTime start,
+			@Valid OffsetDateTime end) {
 		Optional<TimeseriesMetadataEntity> timeseriesMetadata = timeseriesMetadataRepository
 				.findByStationIdAndParameterId(stationId.intValue(), parameterId.intValue());
 		if (timeseriesMetadata.isEmpty()) {
@@ -41,7 +45,9 @@ public class AggregatesApiController extends BasePathController implements Aggre
 					.format("Timeseries with station id %d and parameter id does not exist.", stationId, parameterId));
 		}
 		int timeSeriesId = timeseriesMetadata.get().getId();
-		String aggregates = timeseriesDataRepository.getAggregate(timeSeriesId, frequency, function);
+		String startString = start != null ? start.toString() : null;
+		String endString = end != null ? end.toString() : null;
+		String aggregates = timeseriesDataRepository.getAggregate(timeSeriesId, frequency, function, startString, endString);
 		return ResponseEntity.ok(aggregates);
 	}
 

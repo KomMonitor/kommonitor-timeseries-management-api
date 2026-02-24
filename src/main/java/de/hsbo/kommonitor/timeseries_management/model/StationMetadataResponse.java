@@ -2,6 +2,8 @@ package de.hsbo.kommonitor.timeseries_management.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,11 +14,11 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * StationMetadata
+ * StationMetadataResponse
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-20T15:38:36.943031800+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
-public class StationMetadata implements Serializable {
+public class StationMetadataResponse implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -26,20 +28,23 @@ public class StationMetadata implements Serializable {
 
   private Position position;
 
-  public StationMetadata() {
+  @Valid
+  private List<ParameterResponse> parameters = new ArrayList<>();
+
+  public StationMetadataResponse() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public StationMetadata(String name, BigDecimal id, Position position) {
+  public StationMetadataResponse(String name, BigDecimal id, Position position) {
     this.name = name;
     this.id = id;
     this.position = position;
   }
 
-  public StationMetadata name(String name) {
+  public StationMetadataResponse name(String name) {
     this.name = name;
     return this;
   }
@@ -59,7 +64,7 @@ public class StationMetadata implements Serializable {
     this.name = name;
   }
 
-  public StationMetadata id(BigDecimal id) {
+  public StationMetadataResponse id(BigDecimal id) {
     this.id = id;
     return this;
   }
@@ -79,7 +84,7 @@ public class StationMetadata implements Serializable {
     this.id = id;
   }
 
-  public StationMetadata position(Position position) {
+  public StationMetadataResponse position(Position position) {
     this.position = position;
     return this;
   }
@@ -99,6 +104,34 @@ public class StationMetadata implements Serializable {
     this.position = position;
   }
 
+  public StationMetadataResponse parameters(List<ParameterResponse> parameters) {
+    this.parameters = parameters;
+    return this;
+  }
+
+  public StationMetadataResponse addParametersItem(ParameterResponse parametersItem) {
+    if (this.parameters == null) {
+      this.parameters = new ArrayList<>();
+    }
+    this.parameters.add(parametersItem);
+    return this;
+  }
+
+  /**
+   * list of parameters of the station
+   * @return parameters
+   */
+  @Valid 
+  @Schema(name = "parameters", description = "list of parameters of the station", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("parameters")
+  public List<ParameterResponse> getParameters() {
+    return parameters;
+  }
+
+  public void setParameters(List<ParameterResponse> parameters) {
+    this.parameters = parameters;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -107,24 +140,26 @@ public class StationMetadata implements Serializable {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    StationMetadata stationMetadata = (StationMetadata) o;
-    return Objects.equals(this.name, stationMetadata.name) &&
-        Objects.equals(this.id, stationMetadata.id) &&
-        Objects.equals(this.position, stationMetadata.position);
+    StationMetadataResponse stationMetadataResponse = (StationMetadataResponse) o;
+    return Objects.equals(this.name, stationMetadataResponse.name) &&
+        Objects.equals(this.id, stationMetadataResponse.id) &&
+        Objects.equals(this.position, stationMetadataResponse.position) &&
+        Objects.equals(this.parameters, stationMetadataResponse.parameters);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, id, position);
+    return Objects.hash(name, id, position, parameters);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class StationMetadata {\n");
+    sb.append("class StationMetadataResponse {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    position: ").append(toIndentedString(position)).append("\n");
+    sb.append("    parameters: ").append(toIndentedString(parameters)).append("\n");
     sb.append("}");
     return sb.toString();
   }

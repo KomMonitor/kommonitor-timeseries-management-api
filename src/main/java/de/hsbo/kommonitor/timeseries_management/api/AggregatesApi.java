@@ -6,6 +6,8 @@
 package de.hsbo.kommonitor.timeseries_management.api;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,7 +29,7 @@ import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-29T14:02:55.548290400+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-23T13:15:22.249674500+01:00[Europe/Berlin]", comments = "Generator version: 7.13.0")
 @Validated
 @Tag(name = "aggregates", description = "the aggregates API")
 public interface AggregatesApi {
@@ -40,7 +42,9 @@ public interface AggregatesApi {
      * @param parameterId the identifier of the parameter (required)
      * @param frequency the identifier of the station (required)
      * @param function the identifier of the parameter (required)
-     * @return timeseries data (status code 200)
+     * @param start optional start timestamp (optional)
+     * @param end optional end timestamp (optional)
+     * @return aggregated timeseries data (status code 200)
      *         or API key is missing or invalid (status code 401)
      *         or Forbidden (status code 403)
      *         or Not Found (status code 404)
@@ -52,7 +56,7 @@ public interface AggregatesApi {
         description = "Get timeseries aggregates",
         tags = { "aggregates" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "timeseries data", content = {
+            @ApiResponse(responseCode = "200", description = "aggregated timeseries data", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TimeseriesAggregateData.class)))
             }),
             @ApiResponse(responseCode = "401", description = "API key is missing or invalid"),
@@ -71,7 +75,9 @@ public interface AggregatesApi {
         @Parameter(name = "stationId", description = "the identifier of the station", required = true, in = ParameterIn.PATH) @PathVariable("stationId") BigDecimal stationId,
         @Parameter(name = "parameterId", description = "the identifier of the parameter", required = true, in = ParameterIn.PATH) @PathVariable("parameterId") BigDecimal parameterId,
         @NotNull @Parameter(name = "frequency", description = "the identifier of the station", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "frequency", required = true) String frequency,
-        @NotNull @Parameter(name = "function", description = "the identifier of the parameter", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "function", required = true) String function
+        @NotNull @Parameter(name = "function", description = "the identifier of the parameter", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "function", required = true) String function,
+        @Parameter(name = "start", description = "optional start timestamp", in = ParameterIn.QUERY) @Valid @RequestParam(value = "start", required = false) OffsetDateTime start,
+        @Parameter(name = "end", description = "optional end timestamp", in = ParameterIn.QUERY) @Valid @RequestParam(value = "end", required = false) OffsetDateTime end
     );
 
 }
