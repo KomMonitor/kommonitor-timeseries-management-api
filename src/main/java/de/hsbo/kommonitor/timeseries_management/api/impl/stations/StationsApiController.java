@@ -1,5 +1,6 @@
 package de.hsbo.kommonitor.timeseries_management.api.impl.stations;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.OffsetDateTime;
@@ -81,7 +82,7 @@ public class StationsApiController extends BasePathController implements Station
 	}
 
 	@Override
-	public ResponseEntity<List<StationMetadataResponse>> getStations() {
+	public ResponseEntity<?> getStations() {
 		List<StationMetadataResponse> result = new ArrayList<StationMetadataResponse>();		
 		List<StationsEntity> stationEntities = stationsRepository.findAll();		
 		for (StationsEntity stationsEntity : stationEntities) {
@@ -94,32 +95,34 @@ public class StationsApiController extends BasePathController implements Station
 			for (ParametersEntity parametersEntity : stationsEntityParameters) {
 				
 				ParameterResponse parameterResponse = new ParameterResponse(parametersEntity.getName(), parametersEntity.getUnit());
+				parameterResponse.setId(BigDecimal.valueOf(parametersEntity.getId()));
 
 				Optional<TimeseriesMetadataEntity> timeseriesMetadata = timeseriesMetadataRepository
 						.findByStationIdAndParameterId(stationsEntity.getId(), parametersEntity.getId());
 				if (timeseriesMetadata.isEmpty()) {
-					//continue
+					continue;
 					//TODO
 				}
 				int timeSeriesId = timeseriesMetadata.get().getId();
 				String rangeInfo = timeseriesDataRepository.getRange(timeSeriesId);
-				try {
-					JsonNode rangeInfoNode = objectMapper.readTree(rangeInfo);
-					if(rangeInfoNode instanceof ObjectNode) {
-					   ObjectNode rangeInfObjectNode = (ObjectNode) rangeInfoNode;
-					   ObjectNode lastEntry = (ObjectNode) rangeInfObjectNode.get("last_entry");
-					   TimeseriesData data = new TimeseriesData(Float.valueOf(lastEntry.get("value").asText()), OffsetDateTime.parse(lastEntry.get("timestamp").asText()));
-					   parameterResponse.setLastEntry(data);
-					   ObjectNode rangeObjectNode = (ObjectNode) rangeInfObjectNode.get("range");					   
-					   OffsetDateTime start = OffsetDateTime.parse(rangeObjectNode.get("start").asText());
-					   OffsetDateTime end = OffsetDateTime.parse(rangeObjectNode.get("end").asText());
-					   ParameterResponseAllOfRange range = new ParameterResponseAllOfRange(start, end);
-					   parameterResponse.setRange(range);					   
-					}
-				} catch (JsonProcessingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}				
+				if(rangeInfo != null) {
+					try {
+						JsonNode rangeInfoNode = objectMapper.readTree(rangeInfo);
+						if(rangeInfoNode instanceof ObjectNode) {
+						   ObjectNode rangeInfObjectNode = (ObjectNode) rangeInfoNode;
+						   ObjectNode lastEntry = (ObjectNode) rangeInfObjectNode.get("last_entry");
+						   TimeseriesData data = new TimeseriesData(Float.valueOf(lastEntry.get("value").asText()), OffsetDateTime.parse(lastEntry.get("timestamp").asText()));
+						   parameterResponse.setLastEntry(data);
+						   ObjectNode rangeObjectNode = (ObjectNode) rangeInfObjectNode.get("range");					   
+						   OffsetDateTime start = OffsetDateTime.parse(rangeObjectNode.get("start").asText());
+						   OffsetDateTime end = OffsetDateTime.parse(rangeObjectNode.get("end").asText());
+						   ParameterResponseAllOfRange range = new ParameterResponseAllOfRange(start, end);
+						   parameterResponse.setRange(range);					   
+						}
+					} catch (JsonProcessingException e) {
+						return ResponseEntity.internalServerError().body(e.getMessage());
+					}					
+				}			
 				resultParameterResponses.add(parameterResponse);
 			}
 			stationMetadataResponse.setParameters(resultParameterResponses);
