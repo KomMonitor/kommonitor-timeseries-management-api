@@ -210,7 +210,31 @@ public class TimeSeriesManagementApiIT {
 
 	}
 
-	private void postTimeseriesData() throws Exception {
+	/**
+	 * <p>
+	 * testGetTimeseriesDataWithStartEnd.
+	 * </p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
+	@Test
+	void testGetTimeseriesDataWithStartEnd() {
+		try {
+			String parameterId = postTimeseriesData();
+			String timeseriesEdpoint = String.format(TIMESERIES_DATA_ENDPOINT_TEMPLATE, STATION_ID, parameterId);
+			ResultActions resultActions = performPostRequest(timeseriesEdpoint, "add-timeseries-data24hClock.json");
+			resultActions.andExpect(status().isOk());
+			resultActions = mvc.perform(get(timeseriesEdpoint).contentType(MediaType.APPLICATION_JSON)
+					.param("start", "2026-01-28T07:30:05.838Z")
+					.param("end", "2026-01-28T21:30:05.838Z"));
+			resultActions.andExpect(status().isOk());
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+
+	}
+
+	private String postTimeseriesData() throws Exception {
 		String parameterId = postTimeseriesMetadata();
 		assertNotEquals("", parameterId);
 		String timeseriesEdpoint = String.format(TIMESERIES_DATA_ENDPOINT_TEMPLATE, STATION_ID, parameterId);
@@ -221,6 +245,7 @@ public class TimeSeriesManagementApiIT {
 		String content = resultActions.andReturn().getResponse().getContentAsString();
 		assertNotNull(content);
 		DocumentContext json = JsonPath.parse(content);
+		return parameterId;
 	}
 
 	private String postTimeseriesMetadata() throws Exception {
